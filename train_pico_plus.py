@@ -371,6 +371,7 @@ def train(args, train_loader, model, loss_fn, loss_cont_fn, optimizer, epoch, tb
 
             # get positive set by contrasting predicted labels
             if epoch >= args.knn_start:
+                # KNN + Prototype
                 cosine_corr = features_cont[:batch_size] @ features_cont.T
                 _, kNN_index = torch.topk(cosine_corr, k=args.chosen_neighbors, dim=-1, largest=True)
                 # largest cosine correlation indicates closer l2 distance
