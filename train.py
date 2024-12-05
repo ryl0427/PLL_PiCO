@@ -15,7 +15,7 @@ import torch.optim
 import torch.multiprocessing as mp
 import torch.utils.data
 import torch.utils.data.distributed
-import tensorboard_logger as tb_logger
+# import tensorboard_logger as tb_logger
 import numpy as np
 from model import PiCO
 from resnet import *
@@ -256,7 +256,8 @@ def main_worker(gpu, ngpus_per_node, args):
     # set loss functions (with pseudo-targets maintained)
 
     if args.gpu==0:
-        logger = tb_logger.Logger(logdir=os.path.join(args.exp_dir,'tensorboard'), flush_secs=2)
+        # logger = tb_logger.Logger(logdir=os.path.join(args.exp_dir,'tensorboard'), flush_secs=2)
+        logger = None
     else:
         logger = None
 
