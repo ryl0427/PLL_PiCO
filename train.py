@@ -360,12 +360,13 @@ def train(train_loader, model, loss_fn, loss_cont_fn, optimizer, epoch, args, tb
         end = time.time()
         if i % args.print_freq == 0:
             progress.display(i)
-
+    """       
     if args.gpu == 0:
         tb_logger.log_value('Train Acc', acc_cls.avg, epoch)
         tb_logger.log_value('Prototype Acc', acc_proto.avg, epoch)
         tb_logger.log_value('Classification Loss', loss_cls_log.avg, epoch)
         tb_logger.log_value('Contrastive Loss', loss_cont_log.avg, epoch)
+    """
     
 
 def test(model, test_loader, args, epoch, tb_logger):
@@ -388,8 +389,8 @@ def test(model, test_loader, args, epoch, tb_logger):
         
         print('Accuracy is %.2f%% (%.2f%%)'%(acc_tensors[0],acc_tensors[1]))
         if args.gpu ==0:
-            tb_logger.log_value('Top1 Acc', acc_tensors[0], epoch)
-            tb_logger.log_value('Top5 Acc', acc_tensors[1], epoch)             
+            # tb_logger.log_value('Top1 Acc', acc_tensors[0], epoch)
+            # tb_logger.log_value('Top5 Acc', acc_tensors[1], epoch)             
     return acc_tensors[0]
     
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar', best_file_name='model_best.pth.tar'):
