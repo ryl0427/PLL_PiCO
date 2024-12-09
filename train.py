@@ -24,6 +24,8 @@ from utils.utils_loss import partial_loss, SupConLoss
 from utils.cub200 import load_cub200
 from utils.cifar10 import load_cifar10
 from utils.cifar100 import load_cifar100
+import warnings
+warnings.filterwarnings("ignore")
 
 torch.set_printoptions(precision=2, sci_mode=False)
 
