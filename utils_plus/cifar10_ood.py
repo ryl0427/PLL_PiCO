@@ -64,13 +64,16 @@ def load_cifar10(partial_rate, batch_size, noisy_rate=0):
     
     partialY = generate_uniform_cv_candidate_labels(labels, partial_rate, noisy_rate=noisy_rate)
     # generate partial labels
+    
+    '''
     temp = torch.zeros(partialY.shape)
     temp[torch.arange(partialY.shape[0]), labels] = 1
     if torch.sum(partialY * temp) == partialY.shape[0]:
         print('Running defualt PLL setting')
     else:
         print('Running noisy PLL setting')
-
+    '''
+    
     print('Average candidate num: ', partialY.sum(1).mean())
     partial_matrix_dataset = CIFAR10_Augmentention(data, partialY.float(), labels.float())
     # generate partial label dataset
