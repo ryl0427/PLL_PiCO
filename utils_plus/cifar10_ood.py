@@ -38,7 +38,7 @@ def generate_uniform_cv_candidate_labels(train_labels, partial_rate=0.1, noisy_r
             else:
                 label = random.randint(0, 7)
                 random_n_j = np.random.uniform(0, 1, size=(1, K))
-                partialY[j] = torch.from_numpy((random_n_j <= transition_matrix[label[j]]) * 1)
+                partialY[j] = torch.from_numpy((random_n_j <= transition_matrix[label]) * 1)
 
     if noisy_rate == 0:
         partialY[torch.arange(n), train_labels] = 1.0
