@@ -485,7 +485,7 @@ def test(args, model, test_loader, epoch, tb_logger):
             images, labels = images[mask], labels[mask]
             
             outputs = model(images, args, eval_only=True)    
-            acc1, _ = accuracy(outputs, labels, topk=(1,))
+            acc1, acc5 = accuracy(outputs, labels, topk=(1, 5))
             top1_acc.update(acc1[0])
         
         # average across all processes
