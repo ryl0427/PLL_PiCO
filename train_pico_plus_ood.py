@@ -474,6 +474,37 @@ def test(args, model, test_loader, epoch, tb_logger):
         print('==> Evaluation...')       
         model.eval()    
         top1_acc = AverageMeter("Top1")
+        
+        for batch_idx, (images, labels) in enumerate(test_loader):
+            images, labels = images.cuda(), labels.cuda()
+            
+            # Mask labels to only consider the first 8 classes
+            mask = labels < 8
+            if mask.sum() == 0:
+                continue
+            images, labels = images[mask], labels[mask]
+            
+            outputs = model(images, args, eval_only=True)    
+            acc1, _ = accuracy(outputs, labels, topk=(1,))
+            top1_acc.update(acc1[0])
+        
+        # average across all processes
+        acc_tensor = torch.Tensor([top1_acc.avg]).cuda(args.gpu)
+        dist.all_reduce(acc_tensor)        
+        acc_tensor /= args.world_size
+        
+        print('Top-1 Accuracy for first 8 classes is %.2f%%' % acc_tensor[0])
+        if args.gpu == 0:
+            tb_logger.log_value('Top1 Acc (Top 8 Classes)', acc_tensor[0], epoch)             
+    return acc_tensor[0]
+
+
+'''
+def test(args, model, test_loader, epoch, tb_logger):
+    with torch.no_grad():
+        print('==> Evaluation...')       
+        model.eval()    
+        top1_acc = AverageMeter("Top1")
         top5_acc = AverageMeter("Top5")
         for batch_idx, (images, labels) in enumerate(test_loader):
             images, labels = images.cuda(), labels.cuda()
@@ -492,6 +523,7 @@ def test(args, model, test_loader, epoch, tb_logger):
             tb_logger.log_value('Top1 Acc', acc_tensors[0], epoch)
             tb_logger.log_value('Top5 Acc', acc_tensors[1], epoch)             
     return acc_tensors[0]
+'''
     
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar', best_file_name='model_best.pth.tar'):
     torch.save(state, filename)
